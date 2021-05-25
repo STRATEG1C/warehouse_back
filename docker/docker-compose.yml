@@ -1,0 +1,60 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: derenskiy
+        uid: 1000
+      context: ./
+      dockerfile: ./app/Dockerfile
+    image: travellist
+    container_name: derenskiy-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ../:/var/www
+    networks:
+      derenskiy:
+        ipv4_address: 70.10.0.102
+
+  db:
+    image: mysql:5.7
+    container_name: derenskiy-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: dev
+      MYSQL_ROOT_PASSWORD: devpass
+      MYSQL_PASSWORD: devpass
+      MYSQL_USER: dev
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      derenskiy:
+        ipv4_address: 70.10.0.103
+
+  redis:
+    image: redis:3.2.11
+    networks:
+      derenskiy:
+        ipv4_address: 70.10.0.104
+
+  nginx:
+    image: nginx:alpine
+    container_name: derenskiy-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ../:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+    networks:
+      derenskiy:
+        ipv4_address: 70.10.0.101
+
+networks:
+  derenskiy:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 70.10.0.0/24
+    
