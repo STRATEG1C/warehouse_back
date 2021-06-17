@@ -19,6 +19,7 @@ Route::group(['middleware' => 'cors'], function () {
     Route::prefix('/warehouse')->group(__DIR__.'/api/warehouseLocation.php');
     Route::prefix('/supply')->group(__DIR__.'/api/supply.php');
     Route::prefix('/staff')->group(__DIR__.'/api/staff.php');
+    Route::prefix('/order')->group(__DIR__.'/api/order.php');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
